@@ -46,8 +46,8 @@ io.on('connection', function (socket) {
     socket.on('updatePosition', function (data) {
         player.position.x = data.position.x;
         player.position.y = data.position.y;
-        player.rotationZ = data.rotationZ;
-        //player.position = data.position; try this one instead of 2 lines
+        player.rotationZ = data.rotationZ; //do we really need this one here?
+        //player.position = data.position; //try this one instead of first 2 lines?
 
         socket.broadcast.emit('updatePosition',player);
     });
