@@ -14,6 +14,18 @@ io.on('connection', function (socket) {
     var info = new ClientInfo();
 
     socket.emit('checkVersion', info);
+    socket.on('checkedVersion',(data) => {
+        if(data.version != info.version) {
+            console.log('[SERVER-INFO] A player\'s version is out of date ' + data.version
+                + '| socket id: ' +socket.id);
+            socket.disconnect();
+        }
+        else {
+            console.log('[SERVER-INFO] A player\'s version is up to date ' + data.version
+                + '| socket id: ' + socket.id);
+        }
+    });
+
 
     var player = new Player();
     var thisPlayerID = player.id;
