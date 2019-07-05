@@ -4,7 +4,8 @@
   "description": "Game server for unity game client",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "Talha Altınel",
   "license": "ISC",

@@ -2,11 +2,13 @@ var io = require('socket.io')(process.env.PORT || 4567);
 
 var ClientInfo = require('./ClientInfo.js');
 var Player = require('./Player.js');
+var Food = require('./Food.js');
 
 console.log('[SERVER-INFO] Server has started');
 
 var players = [];
 var sockets = [];
+var foods = [];
 
 io.on('connection', function (socket) {
     console.log('[SERVER-INFO] A player has connected');
@@ -50,6 +52,28 @@ io.on('connection', function (socket) {
         //player.position = data.position; //try this one instead of first 2 lines?
 
         socket.broadcast.emit('updatePosition',player);
+    });
+
+    socket.on('spawnPizza',function (data) {
+       var food = new Food();
+       food.name = 'Food';
+       food.position.x = data.position.x;
+       food.position.y = data.position.y;
+
+       foods.push(food);
+
+       var returnData = {
+           name: food.name,
+           id: food.id,
+           position: {
+               x: food.position.x,
+               y: food.position.y
+           },
+           type: food.type
+       }
+
+       socket.emit('serverSpawn',returnData);
+       socket.broadcast.emit('serverSpawn',returnData);
     });
 
     socket.on('disconnect', function () {
