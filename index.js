@@ -10,8 +10,18 @@ var players = [];
 var sockets = [];
 var foods = [];
 
+var spawnPointsX = [3,6,9,12,15,18];
+var inc = 0;
+
 io.on('connection', function (socket) {
     console.log('[SERVER-INFO] A player has connected');
+    inc++;
+    var returnData = {
+        x: spawnPointsX[inc]
+    };
+
+    socket.emit('setSpawnPointsX', returnData); // know that you are gonna spawn here
+    socket.broadcast.emit('setSpawnPointsX',returnData); // let others know that incoming new player should spawn here
 
     var info = new ClientInfo();
 
@@ -25,11 +35,14 @@ io.on('connection', function (socket) {
         else {
             console.log('[SERVER-INFO] A player\'s version is up to date ' + data.version
                 + '| socket id: ' + socket.id);
+
+
         }
     });
 
 
     var player = new Player();
+    player.position.x = spawnPointsX[inc];
     var thisPlayerID = player.id;
 
     players[thisPlayerID] = player;
@@ -46,10 +59,8 @@ io.on('connection', function (socket) {
     }
 
     socket.on('updatePosition', function (data) {
-        player.position.x = data.position.x;
-        player.position.y = data.position.y;
-        player.rotationZ = data.rotationZ; //do we really need this one here?
-        //player.position = data.position; //try this one instead of first 2 lines?
+        player.position = data.position;
+        player.rotationZ = data.rotationZ;
 
         socket.broadcast.emit('updatePosition',player);
     });
@@ -70,10 +81,14 @@ io.on('connection', function (socket) {
                y: food.position.y
            },
            type: food.type
-       }
+       };
 
        socket.emit('serverSpawn',returnData);
        socket.broadcast.emit('serverSpawn',returnData);
+    });
+
+    socket.on('collisionDestroy', function(data) {
+       console.log('[SERVER-INFO] Collision with sword happened. Player will die| player id: ' + data.id)
     });
 
     socket.on('disconnect', function () {
