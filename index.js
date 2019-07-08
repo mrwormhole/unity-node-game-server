@@ -6,22 +6,99 @@ var Food = require('./Food.js');
 
 console.log('[SERVER-INFO] Server has started');
 
+function generateRandomXY() {
+    var minX = -18;
+    var maxX = 18+1;
+    var minY = -10;
+    var maxY = 10+1;
+    var randomX = Math.random() * (maxX - minX) + minX;
+    var randomY = Math.random() * (maxY - minY) + minY;
+
+    return {
+        x: randomX.toFixed(2),
+        y: randomY.toFixed(2)
+    };
+}
+
+function findAproperPosition(players) {
+    var pos = generateRandomXY();
+    var r = 4;
+    var c = Object.keys(players).length;
+    if(c == 0){
+        console.log('I have found a proper position: ' + pos.x + ' , ' + pos.y);
+        return {
+            x: pos.x,
+            y: pos.y
+        };
+    }
+    for(var playerID in players){
+        c--;
+        a = players[playerID].position.x;
+        b= players[playerID].position.y;
+        // (x-a) **2 + (x-b) ** 2 <= r ** 2
+        if(((pos.x - a) ** 2 + (pos.y - b) ** 2 < r ** 2)){
+            //this means start calculation over
+            console.log('calculation failed');
+            findAproperPosition(players);
+            break;
+        }
+        if(c == 0){
+            console.log('I have found a proper position: ' + pos.x + ' , ' + pos.y);
+            return {
+                x: pos.x,
+                y: pos.y
+            };
+        }
+    }
+}
+
+function findAproperPosition2(players) {
+    var pos = generateRandomXY();
+    var r = 4;
+    var c = Object.keys(players).length;
+    if(c == 0){
+        console.log('I have found a proper position: ' + pos.x + ' , ' + pos.y);
+        return {
+            x: pos.x,
+            y: pos.y
+        };
+    }
+    var solutionFound = false;
+    while(!solutionFound){
+        var pos = generateRandomXY();
+        var c = Object.keys(players).length;
+        for(var playerID in players){
+            c--;
+            a = players[playerID].position.x;
+            b= players[playerID].position.y;
+            // (x-a) **2 + (x-b) ** 2 <= r ** 2
+            if(((pos.x - a) ** 2 + (pos.y - b) ** 2 < r ** 2)) {
+                //this means start calculation over
+                console.log('calculation failed');
+                break;
+            }
+            if(c == 0){
+                console.log('I have found a proper position: ' + pos.x + ' , ' + pos.y);
+                solutionFound = true;
+            }
+        }
+    }
+    return {
+        x: pos.x,
+        y: pos.y
+    };
+}
+
 var players = [];
 var sockets = [];
 var foods = [];
 
-var spawnPointsX = [3,6,9,12,15,18];
-var inc = 0;
+var spawnPointsX = [-18,18,-18,18];
+var spawnPointsY = [10,10,-10,-10];
+var inc = -1;
 
 io.on('connection', function (socket) {
     console.log('[SERVER-INFO] A player has connected');
-    inc++;
-    var returnData = {
-        x: spawnPointsX[inc]
-    };
-
-    socket.emit('setSpawnPointsX', returnData); // know that you are gonna spawn here
-    socket.broadcast.emit('setSpawnPointsX',returnData); // let others know that incoming new player should spawn here
 
     var info = new ClientInfo();
 
@@ -40,15 +117,25 @@ io.on('connection', function (socket) {
         }
     });
 
+    var properPosition = findAproperPosition2(players);
+    var player = new Player(properPosition,properPosition);
+    player.username = "Jackson"; //this works
+    //player.position.x = properPosition.x; //this doesn't work
+    //player.position.y = properPosition.y; //this doesn't work
 
-    var player = new Player();
-    player.position.x = spawnPointsX[inc];
+    //during the proper position calculation
+    //player is created
+    //and player gets the properPosition but if calculation is not calculated yet
+    //it gets to 0,0 how can i wait until calculation is done??
+
     var thisPlayerID = player.id;
 
     players[thisPlayerID] = player;
     sockets[thisPlayerID] = socket;
 
     socket.emit('register', {id: thisPlayerID});
+
+    console.log(player.position.x + "," + player.position.y);
     socket.emit('spawn', player);
     socket.broadcast.emit('spawn', player);
 
