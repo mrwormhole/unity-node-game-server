@@ -15,8 +15,8 @@ function generateRandomXY() {
     var randomY = Math.random() * (maxY - minY) + minY;
 
     return {
-        x: randomX.toFixed(2),
-        y: randomY.toFixed(2)
+        x: parseFloat(Math.round(randomX * 100) / 100).toFixed(2),
+        y: parseFloat(Math.round(randomY * 100) / 100).toFixed(2)
     };
 }
 
@@ -59,8 +59,8 @@ function findAproperPosition2(players) {
     if(c == 0){
         console.log('I have found a proper position: ' + pos.x + ' , ' + pos.y);
         return {
-            x: pos.x,
-            y: pos.y
+            x: (pos.x * 1000.0) / 1000.0,
+            y: (pos.y * 1000.0) / 1000.0
         };
     }
     var solutionFound = false;
@@ -84,18 +84,28 @@ function findAproperPosition2(players) {
         }
     }
     return {
-        x: pos.x,
-        y: pos.y
+        x: (pos.x * 1000.0) / 1000.0,
+        y: (pos.y * 1000.0) / 1000.0
     };
+}
+
+async function test(){
+    console.log(1);
+    await sleep(1000);
+    console.log(2);
+    await sleep(1000);
+    console.log(3);
+}
+
+function sleep(ms){
+    return new Promise(resolve => {
+        setTimeout(resolve,ms)
+    });
 }
 
 var players = [];
 var sockets = [];
 var foods = [];
-
-var spawnPointsX = [-18,18,-18,18];
-var spawnPointsY = [10,10,-10,-10];
-var inc = -1;
 
 io.on('connection', function (socket) {
     console.log('[SERVER-INFO] A player has connected');
@@ -117,16 +127,10 @@ io.on('connection', function (socket) {
         }
     });
 
-    var properPosition = findAproperPosition2(players);
-    var player = new Player(properPosition,properPosition);
-    player.username = "Jackson"; //this works
-    //player.position.x = properPosition.x; //this doesn't work
-    //player.position.y = properPosition.y; //this doesn't work
 
-    //during the proper position calculation
-    //player is created
-    //and player gets the properPosition but if calculation is not calculated yet
-    //it gets to 0,0 how can i wait until calculation is done??
+    var properPosition = findAproperPosition2(players);
+    var player = new Player(properPosition.x,properPosition.y);
+    player.username = "Jackson"; //this works
 
     var thisPlayerID = player.id;
 
@@ -138,6 +142,7 @@ io.on('connection', function (socket) {
     console.log(player.position.x + "," + player.position.y);
     socket.emit('spawn', player);
     socket.broadcast.emit('spawn', player);
+    //io.emit('spawn',player); exits for 2 lines?
 
     for(var playerID in players){
         if(playerID != thisPlayerID){
