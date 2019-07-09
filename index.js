@@ -27,38 +27,6 @@ function findAproperPosition(players) {
     if(c == 0){
         console.log('I have found a proper position: ' + pos.x + ' , ' + pos.y);
         return {
-            x: pos.x,
-            y: pos.y
-        };
-    }
-    for(var playerID in players){
-        c--;
-        a = players[playerID].position.x;
-        b= players[playerID].position.y;
-        // (x-a) **2 + (x-b) ** 2 <= r ** 2
-        if(((pos.x - a) ** 2 + (pos.y - b) ** 2 < r ** 2)){
-            //this means start calculation over
-            console.log('calculation failed');
-            findAproperPosition(players);
-            break;
-        }
-        if(c == 0){
-            console.log('I have found a proper position: ' + pos.x + ' , ' + pos.y);
-            return {
-                x: pos.x,
-                y: pos.y
-            };
-        }
-    }
-}
-
-function findAproperPosition2(players) {
-    var pos = generateRandomXY();
-    var r = 4;
-    var c = Object.keys(players).length;
-    if(c == 0){
-        console.log('I have found a proper position: ' + pos.x + ' , ' + pos.y);
-        return {
             x: (pos.x * 1000.0) / 1000.0,
             y: (pos.y * 1000.0) / 1000.0
         };
@@ -128,7 +96,7 @@ io.on('connection', function (socket) {
     });
 
 
-    var properPosition = findAproperPosition2(players);
+    var properPosition = findAproperPosition(players);
     var player = new Player(properPosition.x,properPosition.y);
     player.username = "Jackson"; //this works
 
