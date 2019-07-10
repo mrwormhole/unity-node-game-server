@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "nodemon": "^1.19.1",
+    "object-sizeof": "^1.4.0",
     "shortid": "^2.2.14",
     "socket.io": "^2.2.0"
   }
