@@ -13,7 +13,7 @@ module.exports = class Connection{
     let player = connection.player;
 
     socket.on('checkedVersion', function (data) {
-          if(data.version != "v1.0.0b") {
+          if(data.version != 'v1.0.0b') {
               console.log('[SERVER-INFO] A player\'s version is out of date ' + data.version
                   + '| socket id: ' +socket.id);
               socket.disconnect();
