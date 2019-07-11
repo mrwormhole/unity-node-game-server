@@ -6,7 +6,9 @@ let GameLobby = require('./lobby/GameLobby.js');
 let GameLobbySettings = require('./lobby/GameLobbySettings.js');
 
 module.exports = class Server {
-  constructor(){
+
+  constructor(versionNumber){
+    this.version = versionNumber;
     this.connections = [];
     this.lobbies = [];
     this.lobbies[0] = new LobbyBase(0);
@@ -53,7 +55,7 @@ module.exports = class Server {
       let gameLobbies = server.lobbies.filter(item => {
           return item instanceof GameLobby;
       });
-      console.log('Found (' + gameLobbies.length + ') lobbies on the server');
+      console.log('[SERVER-INFO] Found (' + gameLobbies.length + ') lobbies on the server');
 
       gameLobbies.forEach(lobby => {
           if(!lobbyFound) {
@@ -67,7 +69,7 @@ module.exports = class Server {
       });
 
       if(!lobbyFound) {
-          console.log('Making a new game lobby');
+          console.log('[SERVER-INFO ] Creating a new game lobby');
           let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('Eliminate all', 4));
           server.lobbies.push(gamelobby);
           server.onSwitchLobby(connection, gamelobby.id);

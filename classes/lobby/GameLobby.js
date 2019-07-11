@@ -76,13 +76,14 @@ module.exports = class GameLobby extends LobbyBase {
         let socket = connection.socket;
 
         var properPosition = Util.findAproperPosition(connections);
-        var IDlyingPlayer = new Player(properPosition.x,properPosition.y,"Jackson");
-        IDlyingPlayer.id = connection.player.id;
+        var player = new Player(properPosition.x,properPosition.y);
+        player.id = connection.player.id;
+        player.username = connection.player.username;
 
-        console.log("Network is gonna get pumped this much: " + sizeof(IDlyingPlayer));
+        //console.log("[DEBUG]Network is gonna get pumped this much: " + sizeof(IDlyingPlayer));
 
-        socket.emit('spawn', IDlyingPlayer);
-        socket.broadcast.to(lobby.id).emit('spawn',IDlyingPlayer);
+        socket.emit('spawn', player);
+        socket.broadcast.to(lobby.id).emit('spawn',player);
 
         connections.forEach(c => {
             if(c.player.id != connection.player.id){

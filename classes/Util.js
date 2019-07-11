@@ -17,14 +17,11 @@ module.exports = class Util{
     }
 
     static findAproperPosition(connections) {
-        for(var i = 0; i < connections.length; i++){
-            console.log(connections[i].player);
-        }
         var tempPosition = this.generateRandomXY();
         var r = 4;
         var len = connections.length;
         if(len == 1){
-            console.log('I have found a proper position: ' + tempPosition.x + ' , ' + tempPosition.y);
+            //console.log('I have found a proper position: ' + tempPosition.x + ' , ' + tempPosition.y);
             return {
                 x: (tempPosition.x * 1000.0) / 1000.0,
                 y: (tempPosition.y * 1000.0) / 1000.0
@@ -36,9 +33,7 @@ module.exports = class Util{
             var len = connections.length;
 
             for(var i = 0; i < connections.length; i++){
-                //console.log('c: ' + c.player); //len is always 2;
                 if(!connections[i].hasOwnProperty('player')){
-                    //console.log('BOOOM');
                     continue;
                 }
                 len--;
@@ -50,7 +45,7 @@ module.exports = class Util{
                     break;
                 }
                 if(len == 1){
-                    console.log('I have found a proper position: ' + tempPosition.x + ' , ' + tempPosition.y);
+                    //console.log('I have found a proper position: ' + tempPosition.x + ' , ' + tempPosition.y);
                     solutionFound = true;
                 }
             }

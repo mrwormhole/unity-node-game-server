@@ -3,7 +3,7 @@ var shortID = require('shortid');
 var vec2 = require('./Vector2D.js');
 
 module.exports = class Player {
-    constructor(x, y, u = "unknown"){
+    constructor(x, y, u = 'notdefined'){
         this.username = u;
         this.id = shortID.generate();
         this.lobby = 0;

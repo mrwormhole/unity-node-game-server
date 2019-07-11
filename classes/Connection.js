@@ -14,7 +14,7 @@ module.exports = class Connection{
     let player = connection.player;
 
     socket.on('checkedVersion', function (data) {
-          if(data.version != 'v1.0.0b') {
+          if(data.version != server.version) {
               console.log('[SERVER-INFO] A player\'s version is out of date ' + data.version
                   + '| socket id: ' +socket.id);
               socket.disconnect();
@@ -29,7 +29,8 @@ module.exports = class Connection{
         server.onDisconnected(connection)
     });
 
-    socket.on('joinGame', function () {
+    socket.on('joinGame', function (data) {
+        connection.player.username = data.username;
         server.onAttemptToJoinGame(connection)
     });
 
@@ -48,6 +49,13 @@ module.exports = class Connection{
         connection.lobby.onCollisionDestroy(connection, data);
     });
 
+  }
 
+  checkAndRegister(){
+      let connection = this;
+      let server = connection.server;
+
+      connection.socket.emit('checkVersion', { version: server.version});
+      connection.socket.emit('register', { id: connection.player.id});
   }
 };
