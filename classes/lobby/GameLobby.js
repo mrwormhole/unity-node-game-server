@@ -2,6 +2,7 @@ let LobbyBase = require('./LobbyBase.js');
 let GameLobbySettings = require('./GameLobbySettings.js');
 let Connection = require('../Connection.js');
 let Util = require('../Util.js');
+let Player = require('../Player.js');
 let Food = require('../Food.js');
 
 var sizeof = require('object-sizeof');

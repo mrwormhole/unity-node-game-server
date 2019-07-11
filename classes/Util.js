@@ -17,10 +17,13 @@ module.exports = class Util{
     }
 
     static findAproperPosition(connections) {
-        var tempPosition = generateRandomXY();
+        for(var i = 0; i < connections.length; i++){
+            console.log(connections[i].player);
+        }
+        var tempPosition = this.generateRandomXY();
         var r = 4;
         var len = connections.length;
-        if(len == 0){
+        if(len == 1){
             console.log('I have found a proper position: ' + tempPosition.x + ' , ' + tempPosition.y);
             return {
                 x: (tempPosition.x * 1000.0) / 1000.0,
@@ -29,19 +32,25 @@ module.exports = class Util{
         }
         var solutionFound = false;
         while(!solutionFound){
-            var tempPosition = generateRandomXY();
+            var tempPosition = this.generateRandomXY();
             var len = connections.length;
-            for(var c in connections){
+
+            for(var i = 0; i < connections.length; i++){
+                //console.log('c: ' + c.player); //len is always 2;
+                if(!connections[i].hasOwnProperty('player')){
+                    //console.log('BOOOM');
+                    continue;
+                }
                 len--;
-                var a = c.player.position.x;
-                var b = c.player.position.y;
+                var a = connections[i].player.position.x;
+                var b = connections[i].player.position.y;
                 if(((tempPosition.x - a) ** 2 + (tempPosition.y - b) ** 2 < r ** 2)) {
                     //this means start calculation over
                     console.log('calculation failed');
                     break;
                 }
-                if(len == 0){
-                    console.log('I have found a proper position: ' + pos.x + ' , ' + pos.y);
+                if(len == 1){
+                    console.log('I have found a proper position: ' + tempPosition.x + ' , ' + tempPosition.y);
                     solutionFound = true;
                 }
             }

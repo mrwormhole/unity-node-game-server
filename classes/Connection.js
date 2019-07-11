@@ -1,4 +1,5 @@
 module.exports = class Connection{
+
   constructor(){
       this.socket;
       this.player;
