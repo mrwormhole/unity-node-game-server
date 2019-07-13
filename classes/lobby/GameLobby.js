@@ -67,7 +67,13 @@ module.exports = class GameLobby extends LobbyBase {
     }
 
     onCollisionDestroy(connection = Connection, data){
-        console.log('[SERVER-INFO] Collision with sword happened. Player will die| player id: ' + data.id)
+        let lobby = this;
+        console.log('[DEBUG] Collision with sword happened. Player will die| player id: ' + data.id)
+
+        var returnData = { id: data.id };
+
+        connection.socket.emit('unspawn',returnData);
+        connection.socket.broadcast.to(lobby.id).emit('unspawn',returnData);
     }
 
     addPlayer(connection = Connection){

@@ -69,7 +69,7 @@ module.exports = class Server {
       });
 
       if(!lobbyFound) {
-          console.log('[SERVER-INFO ] Creating a new game lobby');
+          console.log('[SERVER-INFO] Creating a new game lobby');
           let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('Eliminate all', 4));
           server.lobbies.push(gamelobby);
           server.onSwitchLobby(connection, gamelobby.id);
