@@ -43,7 +43,7 @@ module.exports = class GameLobby extends LobbyBase {
         //Handle unspawning any server spawned objects here
     }
 
-    onSpawnPizza(connection = Connection){
+    onSpawnPizza(connection = Connection, data){
         let lobby = this;
 
         let food = new Food();
