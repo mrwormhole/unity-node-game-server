@@ -4,6 +4,6 @@ var ServerObject = require('./ServerObject.js');
 module.exports = class Food extends ServerObject{
     constructor(){
         super();
-        this.type = "Pizza"; //delete this later on
+        this.name = "Pizza";
     }
 };

@@ -43,6 +43,7 @@ module.exports = class GameLobby extends LobbyBase {
         //Handle unspawning any server spawned objects here
     }
 
+    // Lets IMPROVE THIS BABY!
     onSpawnPizza(connection = Connection, data){
         let lobby = this;
 
@@ -83,6 +84,7 @@ module.exports = class GameLobby extends LobbyBase {
 
         var properPosition = Util.findAproperPosition(connections);
         var player = new Player(properPosition.x,properPosition.y);
+
         player.id = connection.player.id;
         player.username = connection.player.username;
 

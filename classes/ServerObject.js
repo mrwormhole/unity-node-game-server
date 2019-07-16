@@ -7,5 +7,6 @@ module.exports = class ServerObject{
         this.name = "Server Object";
         this.id = shortID.generate();
         this.position = new vec2();
+        this.rotation = new vec2();
     }
 };
