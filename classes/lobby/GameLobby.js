@@ -32,6 +32,25 @@ module.exports = class GameLobby extends LobbyBase {
         lobby.addPlayer(connection);
 
         //Handle spawning any server spawned objects here
+        if(lobby.foods.length == 0){
+            //spawn 20 pizzas
+            console.log("Time to spawn things!!!!!!!!!!!!!!!!");
+
+                let food = new Food("Pizza");
+                console.log(food.name);
+                var properPosition = Util.findAproperPositionForFoods(lobby.foods);
+                food.position.x = properPosition.x;
+                food.position.y = properPosition.y;
+                food.rotation = Util.generateRandomN(0,360);
+                console.log(food.position.x + " " + food.position.y + " " + food.rotation);
+
+                lobby.foods.push(food);
+                connection.socket.emit('serverSpawn',food);
+
+        }
+        else{
+            //sync avaialable pizzas for this player
+        }
     }
 
     onLeaveLobby(connection = Connection){
@@ -43,28 +62,19 @@ module.exports = class GameLobby extends LobbyBase {
         //Handle unspawning any server spawned objects here
     }
 
-    // Lets IMPROVE THIS BABY!
-    onSpawnPizza(connection = Connection, data){
+    onSpawnPizza(connection = Connection){
         let lobby = this;
 
-        let food = new Food();
-        food.name = 'Food';
-        food.position = data.position;
+        let food = new Food("Pizza");
+        var properPosition = Util.findAproperPositionForFoods(lobby.foods);
+        food.position.x = properPosition.x;
+        food.position.y = properPosition.y;
+        food.rotation = Util.generateRandomN(0,360);
 
         lobby.foods.push(food);
 
-        var returnData = {
-            name: food.name,
-            id: food.id,
-            position: {
-                x: food.position.x,
-                y: food.position.y
-            },
-            type: food.type
-        };
-
-        connection.socket.emit('serverSpawn',returnData);
-        connection.socket.broadcast.to(lobby.id).emit('serverSpawn',returnData);
+        connection.socket.emit('serverSpawn',food);
+        connection.socket.broadcast.to(lobby.id).emit('serverSpawn',food);
     }
 
     onCollisionDestroy(connection = Connection, data){

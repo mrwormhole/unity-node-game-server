@@ -41,14 +41,13 @@ module.exports = class Connection{
         socket.broadcast.to(connection.lobby.id).emit('updatePosition',player);
     });
 
-    socket.on('spawnPizza', function (data) {
-        connection.lobby.onSpawnPizza(connection,data);
+    socket.on('spawnPizza', function () {
+        connection.lobby.onSpawnPizza(connection);
     });
 
     socket.on('collisionDestroy', function (data) {
         connection.lobby.onCollisionDestroy(connection, data);
     });
-
   }
 
   checkAndRegister(){

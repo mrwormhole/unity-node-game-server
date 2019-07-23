@@ -1,5 +1,9 @@
 module.exports = class Util{
 
+    static generateRandomN(min,max){
+        return Math.round(Math.random() * (max-min) + max);
+    }
+
     static generateRandomXY(minX,maxX,minY,maxY){
         var randomX = Math.random() * (maxX - minX) + minX;
         var randomY = Math.random() * (maxY - minY) + minY;
@@ -8,7 +12,6 @@ module.exports = class Util{
             x: Math.round(randomX * 100) / 100,
             y: Math.round(randomY * 100) / 100
         };
-
     }
 
     static findAproperPosition(connections) {
