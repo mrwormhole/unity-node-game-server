@@ -32,25 +32,31 @@ module.exports = class GameLobby extends LobbyBase {
         lobby.addPlayer(connection);
 
         //Handle spawning any server spawned objects here
-        if(lobby.foods.length == 0){
-            //spawn 20 pizzas
-            console.log("Time to spawn things!!!!!!!!!!!!!!!!");
+        /*if(true){
+            this.onSpawnPizza(connection);
+        }*/
 
+        if(lobby.foods.length == 0){
+            for(var i=0;i<20;i++) {
                 let food = new Food("Pizza");
                 console.log(food.name);
                 var properPosition = Util.findAproperPositionForFoods(lobby.foods);
                 food.position.x = properPosition.x;
                 food.position.y = properPosition.y;
-                food.rotation = Util.generateRandomN(0,360);
-                console.log(food.position.x + " " + food.position.y + " " + food.rotation);
+                food.rotationZ = Util.generateRandomN(0,360);
+                console.log(food.position.x + " " + food.position.y + " " + food.rotationZ);
 
                 lobby.foods.push(food);
+                console.log(connection.socket.id);
                 connection.socket.emit('serverSpawn',food);
-
+            }
         }
         else{
-            //sync avaialable pizzas for this player
+            lobby.foods.forEach(f => {
+                connection.socket.emit('serverSpawn',f);
+            });
         }
+
     }
 
     onLeaveLobby(connection = Connection){
@@ -59,7 +65,6 @@ module.exports = class GameLobby extends LobbyBase {
         super.onLeaveLobby(connection);
         lobby.removePlayer(connection);
 
-        //Handle unspawning any server spawned objects here
     }
 
     onSpawnPizza(connection = Connection){
@@ -69,7 +74,7 @@ module.exports = class GameLobby extends LobbyBase {
         var properPosition = Util.findAproperPositionForFoods(lobby.foods);
         food.position.x = properPosition.x;
         food.position.y = properPosition.y;
-        food.rotation = Util.generateRandomN(0,360);
+        food.rotationZ = Util.generateRandomN(0,360);
 
         lobby.foods.push(food);
 
@@ -77,9 +82,25 @@ module.exports = class GameLobby extends LobbyBase {
         connection.socket.broadcast.to(lobby.id).emit('serverSpawn',food);
     }
 
+    onUnspawnPizza(connection = Connection,data){
+        let lobby = this;
+        console.log('[DEBUG] Collision with food happened. Food will die| food id: ' + data.id);
+
+        var returnData = { id:data.id };
+
+        lobby.foods.filter(f => {
+            if(f.id != data.id){
+                return f.id;
+            }
+        });
+
+        connection.socket.emit('serverUnspawn',returnData);
+        connection.socket.broadcast.to(lobby.id).emit('serverUnSpawn',returnData);
+    }
+
     onCollisionDestroy(connection = Connection, data){
         let lobby = this;
-        console.log('[DEBUG] Collision with sword happened. Player will die| player id: ' + data.id)
+        console.log('[DEBUG] Collision with sword happened. Player will die| player id: ' + data.id);
 
         var returnData = { id: data.id };
 

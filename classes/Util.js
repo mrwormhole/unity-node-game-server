@@ -51,6 +51,7 @@ module.exports = class Util{
     }
 
     static findAproperPositionForFoods(foods){
+        //note: we should also check for player positions to get rid of incorrect spawning
         var tempPosition = this.generateRandomXY(-18,19,-10,11);
         var r = 1.2;
         var count = foods.length;

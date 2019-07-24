@@ -45,6 +45,10 @@ module.exports = class Connection{
         connection.lobby.onSpawnPizza(connection);
     });
 
+    socket.on('unspawnPizza',function (data) {
+       connection.lobby.onUnspawnPizza(connection, data);
+    });
+
     socket.on('collisionDestroy', function (data) {
         connection.lobby.onCollisionDestroy(connection, data);
     });
