@@ -1,3 +1,5 @@
+let Util = require('./Util.js'); //for logging
+
 module.exports = class Connection{
 
   constructor(){
@@ -15,13 +17,11 @@ module.exports = class Connection{
 
     socket.on('checkedVersion', function (data) {
           if(data.version != server.version) {
-              console.log('[SERVER-INFO] A player\'s version is out of date ' + data.version
-                  + '| socket id: ' +socket.id);
+			  Util.logWarning('[SERVER-INFO] A player\'s version is out of date ' + data.version + '| socket id: ' +socket.id);
               socket.disconnect();
           }
           else {
-              console.log('[SERVER-INFO] A player\'s version is up to date ' + data.version
-                  + '| socket id: ' + socket.id);
+			  Util.logSuccess('[SERVER-INFO] A player\'s version is up to date ' + data.version + '| socket id: ' + socket.id);
           }
       });
 

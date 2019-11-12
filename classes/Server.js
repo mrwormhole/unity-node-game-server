@@ -1,5 +1,6 @@
 let Connection = require('./Connection.js');
 let Player = require('./Player.js');
+let Util = require('./Util.js'); //for logging
 
 let LobbyBase = require('./lobby/LobbyBase.js');
 let GameLobby = require('./lobby/GameLobby.js');
@@ -25,8 +26,9 @@ module.exports = class Server {
       let player = connection.player;
       let lobbies = server.lobbies;
       server.connections[player.id] = connection;
-
-      console.log('[SERVER-INFO] Player ' + player.debugPlayerInformation() + ' has connected');
+		
+	  Util.logSuccess('[SERVER-INFO] Player ' + player.debugPlayerInformation() + ' has connected');
+ 
       socket.join(player.lobby);
       connection.lobby = lobbies[player.lobby];
       connection.lobby.onEnterLobby(connection);
@@ -39,7 +41,7 @@ module.exports = class Server {
       let id = connection.player.id;
       delete server.connections[id];
 
-      console.log('[SERVER-INFO] Player ' + connection.player.debugPlayerInformation() + ' has disconnected');
+	  Util.logSuccess('[SERVER-INFO] Player ' + connection.player.debugPlayerInformation() + ' has disconnected');
 
       connection.socket.broadcast.to(connection.player.lobby).emit('disconnected', {
           id: id
@@ -55,7 +57,7 @@ module.exports = class Server {
       let gameLobbies = server.lobbies.filter(item => {
           return item instanceof GameLobby;
       });
-      console.log('[SERVER-INFO] Found (' + gameLobbies.length + ') lobbies on the server');
+	  Util.logWarning('[SERVER-INFO] Found (' + gameLobbies.length + ') lobbies on the server');
 
       gameLobbies.forEach(lobby => {
           if(!lobbyFound) {
@@ -69,7 +71,7 @@ module.exports = class Server {
       });
 
       if(!lobbyFound) {
-          console.log('[SERVER-INFO] Creating a new game lobby');
+		  Util.logWarning('[SERVER-INFO] Creating a new game lobby');
           let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('Eliminate all', 4));
           server.lobbies.push(gamelobby);
           server.onSwitchLobby(connection, gamelobby.id);

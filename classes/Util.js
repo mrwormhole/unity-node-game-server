@@ -1,4 +1,26 @@
+const chalk = require('chalk');
+
 module.exports = class Util{
+	
+	static logDebug(message) {
+		console.log(chalk.bgMagentaBright.bold(message));
+	}
+	
+	static logInfo(message) {
+		console.log(chalk.gray.bgCyanBright.bold(message));
+	}
+	
+	static logWarning(message) {
+		console.log(chalk.gray.bgYellowBright.bold(message));
+	}
+	
+	static logError(message) {
+		console.log(chalk.whiteBright.bgRed.bold(message));
+	}
+	
+	static logSuccess(message) {
+		console.log(chalk.whiteBright.bgGreen.bold(message));
+	}
 
     static generateRandomN(min,max){
         return Math.round(Math.random() * (max-min) + max);

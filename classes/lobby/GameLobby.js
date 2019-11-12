@@ -5,7 +5,7 @@ let Util = require('../Util.js');
 let Player = require('../Player.js');
 let Food = require('../Food.js');
 
-var sizeof = require('object-sizeof');
+var sizeof = require('object-sizeof'); // for measuring packet sizes
 
 module.exports = class GameLobby extends LobbyBase {
     constructor(id, settings = GameLobbySettings) {
@@ -39,16 +39,16 @@ module.exports = class GameLobby extends LobbyBase {
         if(lobby.foods.length == 0){
             for(var i=0;i<20;i++) {
                 let food = new Food("Pizza");
-                console.log(food.name);
+    
                 var properPosition = Util.findAproperPositionForFoods(lobby.foods);
                 food.position.x = properPosition.x;
                 food.position.y = properPosition.y;
                 food.rotationZ = Util.generateRandomN(0,360);
-                console.log(food.position.x + " " + food.position.y + " " + food.rotationZ);
 
                 lobby.foods.push(food);
-                console.log(connection.socket.id);
                 connection.socket.emit('serverSpawn',food);
+				
+				Util.logDebug('[DEBUG] Server spawned ' + food.name + ` on ( ${food.position.x} , ${food.position.y} )` + ` on socket id: ${connection.socket.id}`);
             }
         }
         else{
@@ -84,7 +84,7 @@ module.exports = class GameLobby extends LobbyBase {
 
     onUnspawnPizza(connection = Connection,data){
         let lobby = this;
-        console.log('[DEBUG] Collision with food happened. Food will die| food id: ' + data.id);
+		Util.logDebug('[DEBUG] Collision with food happened. Food will die| food id: ' + data.id);
 
         var returnData = { id:data.id };
 
@@ -100,7 +100,7 @@ module.exports = class GameLobby extends LobbyBase {
 
     onCollisionDestroy(connection = Connection, data){
         let lobby = this;
-        console.log('[DEBUG] Collision with sword happened. Player will die| player id: ' + data.id);
+		Util.logDebug('[DEBUG] Collision with sword happened. Player will die| player id: ' + data.id);
 
         var returnData = { id: data.id };
 

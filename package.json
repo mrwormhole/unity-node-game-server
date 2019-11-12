@@ -10,6 +10,7 @@
   "author": "Talha Altınel",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^3.0.0",
     "nodemon": "^1.19.1",
     "object-sizeof": "^1.4.0",
     "shortid": "^2.2.14",

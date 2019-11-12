@@ -1,4 +1,5 @@
 let Connection = require('../Connection.js');
+let Util = require('../Util.js'); //for logging
 
 module.exports = class LobbyBase{
   constructor(id){
@@ -10,7 +11,7 @@ module.exports = class LobbyBase{
     let lobby = this;
     let player = connection.player;
 
-    console.log('[SERVER-INFO] Player ' + player.debugPlayerInformation() + ' has entered the lobby: '  + lobby.id);
+	Util.logInfo('[LOBBY-INFO] Player ' + player.debugPlayerInformation() + ' has entered the lobby: '  + lobby.id);
 
     lobby.connections.push(connection);
 
@@ -22,7 +23,7 @@ module.exports = class LobbyBase{
       let lobby = this;
       let player = connection.player;
 
-      console.log('[SERVER-INFO] Player ' + player.debugPlayerInformation() + ' has left the lobby: '  + lobby.id);
+	  Util.logInfo('[LOBBY-INFO] Player ' + player.debugPlayerInformation() + ' has left the lobby: '  + lobby.id);
 
       connection.lobby = undefined;
 
