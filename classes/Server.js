@@ -17,7 +17,7 @@ module.exports = class Server {
 
   onConnected(socket){
       let server = this;
-
+      
       let connection = new Connection();
       connection.socket = socket;
       connection.player = new Player(); //checkPos before spawn
