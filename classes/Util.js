@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 
-module.exports = class Util{
+module.exports = class Util {
 	
 	static logDebug(message) {
 		console.log(chalk.bgMagentaBright.bold(message));
@@ -22,11 +22,11 @@ module.exports = class Util{
 		console.log(chalk.whiteBright.bgGreen.bold(message));
 	}
 
-    static generateRandomN(min,max){
+    static generateRandomN(min,max) {
         return Math.round(Math.random() * (max-min) + max);
     }
 
-    static generateRandomXY(minX,maxX,minY,maxY){
+    static generateRandomXY(minX,maxX,minY,maxY) {
         var randomX = Math.random() * (maxX - minX) + minX;
         var randomY = Math.random() * (maxY - minY) + minY;
 

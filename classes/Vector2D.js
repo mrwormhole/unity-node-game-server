@@ -1,21 +1,21 @@
-module.exports = class Vector2D{
-    constructor(x = 0, y = 0){
+module.exports = class Vector2D {
+    constructor(x = 0, y = 0) {
         this.x = x;
         this.y = y;
     }
 
-    Magnitude(){
+    Magnitude() {
         // returns magnitude which is scalar
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 
-    NormalizedVector(){
+    NormalizedVector() {
         // returns normalized vector object which is not scalar
         var mag = this.Magnitude();
         return new Vector2D(this.x/mag,this.y/mag);
     }
 
-    Distance(O = Vector2D){
+    Distance(O = Vector2D) {
         // returns distance which is scalar
         var direction = new Vector2D();
         direction.x = O.x - this.x;
@@ -23,7 +23,7 @@ module.exports = class Vector2D{
         return new direction.Magnitude();
     }
 
-    DebugPosition(){
+    DebugPosition() {
         return "(" + this.x + "," + this.y + ")";
     }
 };

@@ -1,6 +1,6 @@
 let Util = require('./Util.js'); //for logging
 
-module.exports = class Connection{
+module.exports = class Connection {
 
   constructor(){
       this.socket;
@@ -45,7 +45,7 @@ module.exports = class Connection{
         connection.lobby.onSpawnPizza(connection);
     });
 
-    socket.on('unspawnPizza',function (data) {
+    socket.on('unspawnPizza', function (data) {
        connection.lobby.onUnspawnPizza(connection, data);
     });
 

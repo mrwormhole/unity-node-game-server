@@ -14,7 +14,7 @@ module.exports = class GameLobby extends LobbyBase {
         this.foods = []
     }
 
-    canEnterLobby(connection = Connection){
+    canEnterLobby(connection = Connection) {
        let lobby = this;
        let maxPlayerCount = lobby.settings.maxPlayers;
        let currentPlayerCount = lobby.connections.length;
@@ -25,17 +25,13 @@ module.exports = class GameLobby extends LobbyBase {
        return true;
     }
 
-    onEnterLobby(connection = Connection){
+    onEnterLobby(connection = Connection) {
         let lobby = this;
 
         super.onEnterLobby(connection);
         lobby.addPlayer(connection);
 
         //Handle spawning any server spawned objects here
-        /*if(true){
-            this.onSpawnPizza(connection);
-        }*/
-
         if(lobby.foods.length == 0){
             for(var i=0;i<20;i++) {
                 let food = new Food("Pizza");
@@ -59,15 +55,14 @@ module.exports = class GameLobby extends LobbyBase {
 
     }
 
-    onLeaveLobby(connection = Connection){
+    onLeaveLobby(connection = Connection) {
         let lobby = this;
 
         super.onLeaveLobby(connection);
         lobby.removePlayer(connection);
-
     }
 
-    onSpawnPizza(connection = Connection){
+    onSpawnPizza(connection = Connection) {
         let lobby = this;
 
         let food = new Food("Pizza");
@@ -77,28 +72,25 @@ module.exports = class GameLobby extends LobbyBase {
         food.rotationZ = Util.generateRandomN(0,360);
 
         lobby.foods.push(food);
+        console.log("[FOOD COUNT]: ", this.foods.length);
 
         connection.socket.emit('serverSpawn',food);
         connection.socket.broadcast.to(lobby.id).emit('serverSpawn',food);
     }
 
-    onUnspawnPizza(connection = Connection,data){
+    onUnspawnPizza(connection = Connection,data) {
         let lobby = this;
 		Util.logDebug('[DEBUG] Collision with food happened. Food will die| food id: ' + data.id);
 
         var returnData = { id:data.id };
 
-        lobby.foods.filter(f => {
-            if(f.id != data.id){
-                return f.id;
-            }
-        });
+        lobby.foods = lobby.foods.filter(f => f.id != data.id);
 
         connection.socket.emit('serverUnspawn',returnData);
         connection.socket.broadcast.to(lobby.id).emit('serverUnSpawn',returnData);
     }
 
-    onCollisionDestroy(connection = Connection, data){
+    onCollisionDestroy(connection = Connection, data) {
         let lobby = this;
 		Util.logDebug('[DEBUG] Collision with sword happened. Player will die| player id: ' + data.id);
 
@@ -108,7 +100,7 @@ module.exports = class GameLobby extends LobbyBase {
         connection.socket.broadcast.to(lobby.id).emit('unspawn',returnData);
     }
 
-    addPlayer(connection = Connection){
+    addPlayer(connection = Connection) {
         let lobby = this;
         let connections = lobby.connections;
         let socket = connection.socket;
@@ -131,7 +123,7 @@ module.exports = class GameLobby extends LobbyBase {
         });
     }
 
-    removePlayer(connection = Connection){
+    removePlayer(connection = Connection) {
         let lobby = this;
 
         connection.socket.broadcast.to(lobby.id).emit('disconnected',{

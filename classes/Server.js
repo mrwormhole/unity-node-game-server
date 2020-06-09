@@ -8,14 +8,14 @@ let GameLobbySettings = require('./lobby/GameLobbySettings.js');
 
 module.exports = class Server {
 
-  constructor(versionNumber){
+  constructor(versionNumber) {
     this.version = versionNumber;
     this.connections = [];
     this.lobbies = [];
     this.lobbies[0] = new LobbyBase(0);
   }
 
-  onConnected(socket){
+  onConnected(socket) {
       let server = this;
       
       let connection = new Connection();
@@ -36,7 +36,7 @@ module.exports = class Server {
       return connection;
   }
 
-  onDisconnected(connection = Connection){
+  onDisconnected(connection = Connection) {
       let server = this;
       let id = connection.player.id;
       delete server.connections[id];
@@ -50,7 +50,7 @@ module.exports = class Server {
       server.lobbies[connection.player.lobby].onLeaveLobby(connection);
   }
 
-  onAttemptToJoinGame(connection = Connection){
+  onAttemptToJoinGame(connection = Connection) {
       let server = this;
       let lobbyFound = false;
 
@@ -78,7 +78,7 @@ module.exports = class Server {
       }
   }
 
-  onSwitchLobby(connection = Connection, lobbyID){
+  onSwitchLobby(connection = Connection, lobbyID) {
       let server = this;
       let lobbies = server.lobbies;
 
