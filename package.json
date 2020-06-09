@@ -10,10 +10,10 @@
   "author": "Talha Altınel",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^3.0.0",
-    "nodemon": "^1.19.1",
-    "object-sizeof": "^1.4.0",
-    "shortid": "^2.2.14",
-    "socket.io": "^2.2.0"
+    "chalk": "^4.0.0",
+    "nodemon": "^2.0.4",
+    "object-sizeof": "^1.6.0",
+    "shortid": "^2.2.15",
+    "socket.io": "^2.3.0"
   }
 }
