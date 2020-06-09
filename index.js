@@ -8,7 +8,7 @@ Util.logSuccess('[SERVER-INFO] Server has started');
 io.on('connection', function (socket) {
     let connection = server.onConnected(socket);
     connection.createEvents();
-    connection.checkAndRegister();
+    connection.checkVersion();
 });
 
 
