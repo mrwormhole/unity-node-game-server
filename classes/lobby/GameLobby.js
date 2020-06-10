@@ -52,7 +52,6 @@ module.exports = class GameLobby extends LobbyBase {
                 connection.socket.emit('serverSpawn',f);
             });
         }
-
     }
 
     onLeaveLobby(connection = Connection) {
@@ -110,6 +109,7 @@ module.exports = class GameLobby extends LobbyBase {
 
         player.id = connection.player.id;
         player.username = connection.player.username;
+        player.skin = connection.player.skin;
 
         //console.log("[DEBUG]Network is gonna get pumped this much: " + sizeof(IDlyingPlayer));
 

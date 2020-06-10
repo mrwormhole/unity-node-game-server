@@ -16,9 +16,9 @@ module.exports = class Connection {
         let player = connection.player;
 
         socket.on('checkedVersion', function (data) {
+            // a way of signing out
             if(data.version != server.version) {
-                Util.logWarning('[SERVER-INFO] A player\'s version is out of date ' + data.version + '| socket id: ' +socket.id);
-                socket.disconnect();
+                Util.logWarning('[SERVER-INFO] A player\'s version is out of date ' + data.version + '| socket id: ' +socket.id);                
             }
             else {
                 Util.logSuccess('[SERVER-INFO] A player\'s version is up to date ' + data.version + '| socket id: ' + socket.id);
@@ -27,19 +27,26 @@ module.exports = class Connection {
         });
 
         socket.on('disconnect', function () {
-            server.onDisconnected(connection)
+            // a way of signing in
+            server.onDisconnected(connection);
         });
 
         socket.on('joinGame', function (data) {
+            // joining the game after username and skin is picked
             connection.player.username = data.username;
+            connection.player.skin = data.skin;
+
             server.onAttemptToJoinGame(connection)
         });
 
         socket.on('updatePosition', function (data) {
             player.position = data.position;
             player.rotationZ = data.rotationZ;
-
-            socket.broadcast.to(connection.lobby.id).emit('updatePosition',player);
+            
+            //hot bug fix after live test, issue #Corona Server Load
+            if ( connection !== undefined) {
+                socket.broadcast.to(connection.lobby.id).emit('updatePosition',player);
+            }
         });
 
         socket.on('spawnPizza', function () {
@@ -56,9 +63,11 @@ module.exports = class Connection {
     }
 
     checkVersion(){
+        // First call to get info from client after client is connected to me
         let connection = this;
         let server = connection.server;
 
         connection.socket.emit('checkVersion', { version: server.version});
     }
+
 };

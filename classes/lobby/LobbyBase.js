@@ -11,7 +11,7 @@ module.exports = class LobbyBase {
     let lobby = this;
     let player = connection.player;
 
-	  Util.logInfo('[LOBBY-INFO] Player ' + player.debugPlayerInformation() + ' has entered the lobby: '  + lobby.id);
+    Util.logInfo('[LOBBY-INFO] Player ' + player.debugPlayerInformation() + ' has entered the lobby: '  + lobby.id);
 
     lobby.connections.push(connection);
 

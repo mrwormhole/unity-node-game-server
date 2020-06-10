@@ -8,86 +8,85 @@ let GameLobbySettings = require('./lobby/GameLobbySettings.js');
 
 module.exports = class Server {
 
-  constructor(versionNumber) {
-    this.version = versionNumber;
-    this.connections = [];
-    this.lobbies = [];
-    this.lobbies[0] = new LobbyBase(0);
-  }
+    constructor(versionNumber) {
+        this.version = versionNumber;
+        this.connections = [];
+        this.lobbies = [];
+        this.lobbies[0] = new LobbyBase(0);
+    }
 
-  onConnected(socket) {
-      let server = this;
-      
-      let connection = new Connection();
-      connection.socket = socket;
-      connection.player = new Player(); //checkPos before spawn
-      connection.server = server;
+    onConnected(socket) {
+        let server = this;
+        
+        let connection = new Connection();
+        connection.socket = socket;
+        connection.player = new Player(); //? should checkPos before spawn??
+        connection.server = server;
 
-      let player = connection.player;
-      let lobbies = server.lobbies;
-      server.connections[player.id] = connection;
-		
-	  Util.logSuccess('[SERVER-INFO] Player ' + player.debugPlayerInformation() + ' has connected');
- 
-      socket.join(player.lobby);
-      connection.lobby = lobbies[player.lobby];
-      connection.lobby.onEnterLobby(connection);
+        let player = connection.player;
+        let lobbies = server.lobbies;
+        server.connections[player.id] = connection;
+        
+        Util.logSuccess('[SERVER-INFO] Player ' + player.debugPlayerInformation() + ' has connected');
 
-      return connection;
-  }
+        socket.join(player.lobby);
+        connection.lobby = lobbies[player.lobby];
+        connection.lobby.onEnterLobby(connection);
 
-  onDisconnected(connection = Connection) {
-      let server = this;
-      let id = connection.player.id;
-      delete server.connections[id];
+        return connection;
+    }
 
-	  Util.logSuccess('[SERVER-INFO] Player ' + connection.player.debugPlayerInformation() + ' has disconnected');
+    onDisconnected(connection = Connection) {
+        let server = this;
+        let id = connection.player.id;
+        delete server.connections[id];
 
-      connection.socket.broadcast.to(connection.player.lobby).emit('disconnected', {
-          id: id
-      });
+        Util.logSuccess('[SERVER-INFO] Player ' + connection.player.debugPlayerInformation() + ' has disconnected');
 
-      server.lobbies[connection.player.lobby].onLeaveLobby(connection);
-  }
+        connection.socket.broadcast.to(connection.player.lobby).emit('disconnected', {
+            id: id
+        });
 
-  onAttemptToJoinGame(connection = Connection) {
-      let server = this;
-      let lobbyFound = false;
+        server.lobbies[connection.player.lobby].onLeaveLobby(connection);
+    }
 
-      let gameLobbies = server.lobbies.filter(item => {
-          return item instanceof GameLobby;
-      });
-	  Util.logWarning('[SERVER-INFO] Found (' + gameLobbies.length + ') lobbies on the server');
+    onAttemptToJoinGame(connection = Connection) {
+        let server = this;
+        let lobbyFound = false;
 
-      gameLobbies.forEach(lobby => {
-          if(!lobbyFound) {
-              let canJoin = lobby.canEnterLobby(connection);
+        let gameLobbies = server.lobbies.filter(item => {
+            return item instanceof GameLobby;
+        });
+        Util.logWarning('[SERVER-INFO] Found (' + gameLobbies.length + ') lobbies on the server');
 
-              if(canJoin) {
-                  lobbyFound = true;
-                  server.onSwitchLobby(connection, lobby.id);
-              }
-          }
-      });
+        gameLobbies.forEach(lobby => {
+            if(!lobbyFound) {
+                let canJoin = lobby.canEnterLobby(connection);
 
-      if(!lobbyFound) {
-		  Util.logWarning('[SERVER-INFO] Creating a new game lobby');
-          let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('Eliminate all', 4));
-          server.lobbies.push(gamelobby);
-          server.onSwitchLobby(connection, gamelobby.id);
-      }
-  }
+                if(canJoin) {
+                    lobbyFound = true;
+                    server.onSwitchLobby(connection, lobby.id);
+                }
+            }
+        });
 
-  onSwitchLobby(connection = Connection, lobbyID) {
-      let server = this;
-      let lobbies = server.lobbies;
+        if(!lobbyFound) {
+            Util.logWarning('[SERVER-INFO] Creating a new game lobby');
+            let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('Eliminate all', 4));
+            server.lobbies.push(gamelobby);
+            server.onSwitchLobby(connection, gamelobby.id);
+        }
+    }
 
-      connection.socket.join(lobbyID);
-      connection.lobby = lobbies[lobbyID];
+    onSwitchLobby(connection = Connection, lobbyID) {
+        let server = this;
+        let lobbies = server.lobbies;
 
-      lobbies[connection.player.lobby].onLeaveLobby(connection);
-      lobbies[lobbyID].onEnterLobby(connection);
-  }
+        connection.socket.join(lobbyID);
+        connection.lobby = lobbies[lobbyID];
 
+        lobbies[connection.player.lobby].onLeaveLobby(connection);
+        lobbies[lobbyID].onEnterLobby(connection);
+    }
 
 };
