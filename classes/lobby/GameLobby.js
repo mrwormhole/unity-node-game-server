@@ -86,7 +86,7 @@ module.exports = class GameLobby extends LobbyBase {
         lobby.foods = lobby.foods.filter(f => f.id != data.id);
 
         connection.socket.emit('serverUnspawn',returnData);
-        connection.socket.broadcast.to(lobby.id).emit('serverUnSpawn',returnData);
+        connection.socket.broadcast.to(lobby.id).emit('serverUnspawn',returnData);
     }
 
     onCollisionDestroy(connection = Connection, data) {
