@@ -50,15 +50,24 @@ module.exports = class Connection {
         });
 
         socket.on('spawnPizza', function () {
-            connection.lobby.onSpawnPizza(connection);
+            // spawn pizza
+            if(connection !== undefined) {
+                connection.lobby.onSpawnPizza(connection);
+            }
         });
 
         socket.on('unspawnPizza', function (data) {
-            connection.lobby.onUnspawnPizza(connection, data);
+            // unspawn pizza
+            if(connection !== undefined) {
+                connection.lobby.onUnspawnPizza(connection, data);
+            }
         });
 
         socket.on('collisionDestroy', function (data) {
-            connection.lobby.onCollisionDestroy(connection, data);
+            // collision destroy
+            if(connection !== undefined) {
+                connection.lobby.onCollisionDestroy(connection, data);
+            }
         });
     }
 
