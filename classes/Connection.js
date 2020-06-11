@@ -35,6 +35,7 @@ module.exports = class Connection {
             // joining the game after username and skin is picked
             connection.player.username = data.username;
             connection.player.skin = data.skin;
+            connection.player.weapon = data.weapon;
 
             server.onAttemptToJoinGame(connection)
         });

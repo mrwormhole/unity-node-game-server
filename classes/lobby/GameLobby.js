@@ -110,6 +110,7 @@ module.exports = class GameLobby extends LobbyBase {
         player.id = connection.player.id;
         player.username = connection.player.username;
         player.skin = connection.player.skin;
+        player.weapon = connection.player.weapon;
 
         //console.log("[DEBUG]Network is gonna get pumped this much: " + sizeof(IDlyingPlayer));
 
