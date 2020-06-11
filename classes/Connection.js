@@ -46,28 +46,36 @@ module.exports = class Connection {
             
             //hot bug fix after live test, issue #Corona Server Load
             if ( connection !== undefined) {
-                socket.broadcast.to(connection.lobby.id).emit('updatePosition',player);
+                if(connection.lobby !== undefined) {
+                    socket.broadcast.to(connection.lobby.id).emit('updatePosition',player);
+                }
             }
         });
 
         socket.on('spawnPizza', function () {
             // spawn pizza
             if(connection !== undefined) {
-                connection.lobby.onSpawnPizza(connection);
+                if(connection.lobby !== undefined) {
+                    connection.lobby.onSpawnPizza(connection);
+                }
             }
         });
 
         socket.on('unspawnPizza', function (data) {
             // unspawn pizza
             if(connection !== undefined) {
-                connection.lobby.onUnspawnPizza(connection, data);
+                if(connection.lobby !== undefined) {
+                    connection.lobby.onUnspawnPizza(connection, data);
+                }
             }
         });
 
         socket.on('collisionDestroy', function (data) {
             // collision destroy
             if(connection !== undefined) {
-                connection.lobby.onCollisionDestroy(connection, data);
+                if(connection.lobby !== undefined) {
+                    connection.lobby.onCollisionDestroy(connection, data);
+                }
             }
         });
     }
