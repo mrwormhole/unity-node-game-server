@@ -11,7 +11,8 @@ module.exports = class GameLobby extends LobbyBase {
     constructor(id, settings = GameLobbySettings) {
         super(id);
         this.settings = settings;
-        this.foods = []
+        this.foods = [];
+        this.maxFoodsCount = 20;
     }
 
     canEnterLobby(connection = Connection) {
@@ -33,7 +34,7 @@ module.exports = class GameLobby extends LobbyBase {
 
         //Handle spawning any server spawned objects here
         if(lobby.foods.length == 0){
-            for(var i=0;i<20;i++) {
+            for(var i=0;i<lobby.maxFoodsCount;i++) {
                 let food = new Food("Pizza");
     
                 var properPosition = Util.findAproperPositionForFoods(lobby.foods);
@@ -64,20 +65,22 @@ module.exports = class GameLobby extends LobbyBase {
     onSpawnPizza(connection = Connection) {
         let lobby = this;
 
-        let food = new Food("Pizza");
-        var properPosition = Util.findAproperPositionForFoods(lobby.foods);
-        food.position.x = properPosition.x;
-        food.position.y = properPosition.y;
-        food.rotationZ = Util.generateRandomN(0,360);
+        if (lobby.foods.length <= lobby.maxFoodsCount - 1) {
+            let food = new Food("Pizza");
+            var properPosition = Util.findAproperPositionForFoods(lobby.foods);
+            food.position.x = properPosition.x;
+            food.position.y = properPosition.y;
+            food.rotationZ = Util.generateRandomN(0,360);
 
-        lobby.foods.push(food);
-        console.log("[FOOD COUNT]: ", this.foods.length);
+            lobby.foods.push(food);
+            console.log("[FOOD COUNT]: ", this.foods.length);
 
-        connection.socket.emit('serverSpawn',food);
-        connection.socket.broadcast.to(lobby.id).emit('serverSpawn',food);
+            connection.socket.emit('serverSpawn',food);
+            connection.socket.broadcast.to(lobby.id).emit('serverSpawn',food);
+        }
     }
 
-    onUnspawnPizza(connection = Connection,data) {
+    onUnspawnPizza(connection = Connection, data) {
         let lobby = this;
 		Util.logDebug('[DEBUG] Collision with food happened. Food will die| food id: ' + data.id);
 
