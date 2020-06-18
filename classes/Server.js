@@ -20,7 +20,7 @@ module.exports = class Server {
         
         let connection = new Connection();
         connection.socket = socket;
-        connection.player = new Player(); //? should checkPos before spawn??
+        connection.player = new Player(); 
         connection.server = server;
 
         let player = connection.player;

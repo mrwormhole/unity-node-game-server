@@ -28,7 +28,7 @@ module.exports = class GameLobby extends LobbyBase {
         lobby.addPlayer(connection);
 
         //Handle spawning any server spawned objects here
-        if(lobby.foods.length == 0){
+        if(lobby.foods.length == 0) {
             for(var i=0;i<lobby.settings.maxFoods;i++) {
                 let food = new Food("Pizza");
     
@@ -115,8 +115,8 @@ module.exports = class GameLobby extends LobbyBase {
         socket.broadcast.to(lobby.id).emit('spawn',player);
 
         connections.forEach(c => {
-            if(c.player.id != connection.player.id){
-                socket.emit('spawn',c.player)
+            if(c.player.id != connection.player.id) {
+                socket.emit('spawn',c.player);
             }
         });
     }
@@ -124,7 +124,7 @@ module.exports = class GameLobby extends LobbyBase {
     removePlayer(connection = Connection) {
         let lobby = this;
 
-        connection.socket.broadcast.to(lobby.id).emit('disconnected',{
+        connection.socket.broadcast.to(lobby.id).emit('disconnected', {
             id: connection.player.id
         });
     }
