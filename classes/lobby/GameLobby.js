@@ -12,15 +12,12 @@ module.exports = class GameLobby extends LobbyBase {
         super(id);
         this.settings = settings;
         this.foods = [];
-        this.maxFoodsCount = 20;
     }
 
     canEnterLobby(connection = Connection) {
        let lobby = this;
-       let maxPlayerCount = lobby.settings.maxPlayers;
-       let currentPlayerCount = lobby.connections.length;
 
-       if(currentPlayerCount + 1 > maxPlayerCount){
+       if(lobby.connections.length + 1 > lobby.settings.maxPlayers){
            return false;
        }
        return true;
@@ -34,7 +31,7 @@ module.exports = class GameLobby extends LobbyBase {
 
         //Handle spawning any server spawned objects here
         if(lobby.foods.length == 0){
-            for(var i=0;i<lobby.maxFoodsCount;i++) {
+            for(var i=0;i<lobby.settings.maxFoods;i++) {
                 let food = new Food("Pizza");
     
                 var properPosition = Util.findAproperPositionForFoods(lobby.foods);
@@ -65,7 +62,7 @@ module.exports = class GameLobby extends LobbyBase {
     onSpawnPizza(connection = Connection) {
         let lobby = this;
 
-        if (lobby.foods.length <= lobby.maxFoodsCount - 1) {
+        if (lobby.foods.length <= lobby.settings.maxFoods - 1) {
             let food = new Food("Pizza");
             var properPosition = Util.findAproperPositionForFoods(lobby.foods);
             food.position.x = properPosition.x;

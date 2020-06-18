@@ -72,7 +72,7 @@ module.exports = class Server {
 
         if(!lobbyFound) {
             Util.logWarning('[SERVER-INFO] Creating a new game lobby');
-            let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('Eliminate all', 4));
+            let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('Eliminate all', 4, 20));
             server.lobbies.push(gamelobby);
             server.onSwitchLobby(connection, gamelobby.id);
         }
