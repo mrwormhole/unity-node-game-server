@@ -5,8 +5,6 @@ let Util = require('../Util.js');
 let Player = require('../Player.js');
 let Food = require('../Food.js');
 
-var sizeof = require('object-sizeof'); // for measuring packet sizes
-
 module.exports = class GameLobby extends LobbyBase {
     constructor(id, settings = GameLobbySettings) {
         super(id);
@@ -70,7 +68,6 @@ module.exports = class GameLobby extends LobbyBase {
             food.rotationZ = Util.generateRandomN(0,360);
 
             lobby.foods.push(food);
-            console.log("[FOOD COUNT]: ", this.foods.length);
 
             connection.socket.emit('serverSpawn',food);
             connection.socket.broadcast.to(lobby.id).emit('serverSpawn',food);
@@ -112,7 +109,7 @@ module.exports = class GameLobby extends LobbyBase {
         player.skin = connection.player.skin;
         player.weapon = connection.player.weapon;
 
-        //console.log("[DEBUG]Network is gonna get pumped this much: " + sizeof(IDlyingPlayer));
+        //player.debugPlayerPacket();
 
         socket.emit('spawn', player);
         socket.broadcast.to(lobby.id).emit('spawn',player);

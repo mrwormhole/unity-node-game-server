@@ -1,6 +1,8 @@
 var shortID = require('shortid');
+var sizeof = require('object-sizeof'); // for measuring packet sizes
 
 var vec2 = require('./Vector2D.js');
+
 
 module.exports = class Player {
     constructor(x, y, u = 'notdefined', s = '800', weapon= '800'){
@@ -11,11 +13,19 @@ module.exports = class Player {
         this.lobby = 0;
         this.position = new vec2(x,y);
         this.rotationZ = 0;
-        this.isDead = false;
     }
 
-    debugPlayerInformation(){
+    debugPlayerInformation() {
         let player = this;
         return '(' + player.username + ' : ' + player.id + ')';
+    }
+
+    debugPlayerPacket() {
+        console.log(`Username:${sizeof(this.username)}bytes, \n
+                    Skin:${sizeof(this.skin)}bytes, \n
+                    Weapon:${sizeof(this.weapon)}bytes, \n
+                    Id:${sizeof(this.id)}bytes, \n
+                    Position: ${sizeof(this.position)}bytes, \n
+                    RotationZ: ${sizeof(this.rotationZ)}bytes, \n`);
     }
 };
